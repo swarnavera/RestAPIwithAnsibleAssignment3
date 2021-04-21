@@ -1,0 +1,21 @@
+---
+ - hosts: localhost
+   connection: local
+   #set local variables from commandline args
+   vars:
+      user_api_token: {{ api_token }}
+      user_mac_addr: {{ mac_address }}
+
+   - name: get company name for the given mac address
+     uri:
+       method: GET
+       return_content: yes
+       status_code: 200
+       body_format: json
+       url: "https://api.macaddress.io/v1 ? search= {{ user_mac_addr }}"
+       headers:
+              X-API-KEY: "{{ user_api_token }}"
+     register: macResponse
+     - debug:
+         msg:
+         - 'Company name for the given mac address is :' macResponse['vendorDetails']['companyname']
